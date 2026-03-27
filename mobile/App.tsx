@@ -1,7 +1,17 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
-import AppNavigator from './navigation/AppNavigator';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import AppNavigator from './src/navigation/AppNavigator';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 30000,
+    },
+  },
+});
 
 const GamerDarkTheme = {
   ...DarkTheme,
@@ -18,9 +28,11 @@ const GamerDarkTheme = {
 
 export default function App() {
   return (
-    <NavigationContainer theme={GamerDarkTheme}>
-      <StatusBar barStyle="light-content" backgroundColor="#0f0f1a" />
-      <AppNavigator />
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer theme={GamerDarkTheme}>
+        <StatusBar barStyle="light-content" backgroundColor="#0f0f1a" />
+        <AppNavigator />
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
